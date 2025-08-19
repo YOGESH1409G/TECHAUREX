@@ -59,17 +59,17 @@ const Navbar = () => {
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <div className="flex items-center space-x-2">
-            <a href="/" className="text-xl font-bold text-foreground hover:text-primary transition-colors">Techaurex</a>
+            <Link to="/" className="text-xl font-bold text-foreground hover:text-primary transition-colors">Techaurex</Link>
           </div>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            <a
-              href="/"
+            <Link
+              to="/"
               className="text-foreground hover:text-primary transition-colors font-medium"
             >
               Home
-            </a>
+            </Link>
             <div
               className="relative"
               onMouseEnter={openCategories}
@@ -94,13 +94,13 @@ const Navbar = () => {
               )}
             </div>
             {navLinks.map((link) => (
-              <a
+              <Link
                 key={link.name}
-                href={link.href}
+                to={link.href}
                 className="text-foreground hover:text-primary transition-colors font-medium"
               >
                 {link.name}
-              </a>
+              </Link>
             ))}
           </nav>
 
@@ -139,22 +139,22 @@ const Navbar = () => {
         {isMenuOpen && (
           <div className="md:hidden py-4 border-t border-border">
             <nav className="flex flex-col space-y-4">
-              <a
-                href="/"
+              <Link
+                to="/"
                 className="text-foreground hover:text-primary transition-colors font-medium py-2"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Home
-              </a>
+              </Link>
               {navLinks.map((link) => (
-                <a
+                <Link
                   key={link.name}
-                  href={link.href}
+                  to={link.href}
                   className="text-foreground hover:text-primary transition-colors font-medium py-2"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {link.name}
-                </a>
+                </Link>
               ))}
               <div>
                 <div className="text-xs uppercase text-muted-foreground mb-2">Categories</div>
