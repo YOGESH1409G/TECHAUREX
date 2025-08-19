@@ -61,7 +61,7 @@ const About = () => {
 
           <div className="card-modern p-6 text-center">
             <div className="mx-auto w-28 h-28 rounded-full overflow-hidden bg-muted">
-              <img src="/placeholder.svg" alt="Founder" className="w-full h-full object-cover" />
+                  <img src="/founder.jpg" alt="Hari Om Gupta" className="w-full h-full object-cover" />
             </div>
             <div className="mt-4">
               <h3 className="font-semibold text-lg">Hari Om Gupta</h3>
