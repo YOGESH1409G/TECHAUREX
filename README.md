@@ -1,73 +1,136 @@
-# Welcome to your Lovable project
+# Techaurex — Gadget Reviews & Guides
 
-## Project info
+Techaurex is a modern, responsive gadget reviews site built with React, Vite, Tailwind CSS, React Router, and shadcn/ui. It features category browsing, powerful filtering, product detail pages with image carousels, a global search experience, and light/dark themes.
 
-**URL**: https://lovable.dev/projects/e8b5b50c-d7d6-426f-8d7b-767eab856993
+## Features
 
-## How can I edit this code?
+- Categories dropdown: Mobile, Laptop, Earphone
+- Category pages with filters
+  - Price range (INR)
+  - Company filter (context-aware per category)
+  - Sections: Latest Reviews (date-sorted), Other Reviews (random)
+  - “Show more” loads more items (adaptive: +4 on mobile, +6 on desktop)
+- Product cards
+  - Clickable to Product Details page (`/product/:id`)
+  - “View Deal” opens affiliate link in new tab
+- Product Details page
+  - Responsive image carousel with thumbnails
+  - Name, category, description, features, average rating, total reviews
+  - Local star rating input (for future backend integration)
+  - Purchase/View Deal buttons
+- Latest page (`/latest`): newest products by date/time
+- Search (`/search?q=...`)
+  - Full-text over names and descriptions
+  - Fallback: if no matches, shows products by detected company
+  - “Product not listed” when none found
+- About page: mission/story with founder (Hari Om Gupta)
+- Contact page: feedback form, email, and social links (X/Instagram)
+- Dark/light mode toggle (persisted in localStorage), tuned accessible dark palette
+- Scroll-to-top on route change
 
-There are several ways of editing your application.
+## Tech Stack
 
-**Use Lovable**
+- React 18 + Vite 5
+- TypeScript
+- Tailwind CSS + shadcn/ui
+- React Router v6
+- Lucide icons
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/e8b5b50c-d7d6-426f-8d7b-767eab856993) and start prompting.
+## Getting Started
 
-Changes made via Lovable will be committed automatically to this repo.
+### Prerequisites
 
-**Use your preferred IDE**
+- Node.js 18+
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Install
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+```bash
+npm install
+# or
+pnpm install
+# or
+yarn
+```
 
-Follow these steps:
+### Run dev server
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+```bash
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+Open the app at the URL printed by Vite (usually `http://localhost:5173`).
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### Build
 
-**Use GitHub Codespaces**
+```bash
+npm run build
+npm run preview
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## Project Structure
 
-## What technologies are used for this project?
+```
+src/
+  components/
+    Navbar.tsx            # Top nav with categories dropdown, search, theme toggle
+    Filters.tsx           # Sidebar filters (price/company)
+    ProductCard.tsx       # Card; clickable to details; affiliate View Deal
+    ScrollToTop.tsx       # Scrolls to top on route changes
+  pages/
+    Index.tsx             # Landing page
+    CategoryPage.tsx      # Category view with filters/sections
+    ProductDetails.tsx    # Details page with carousel & rating
+    Latest.tsx            # Newest products page
+    SearchResults.tsx     # Search experience with company fallback
+    About.tsx             # Story & founder section
+    Contact.tsx           # Feedback form, email, and socials
+  data/
+    mockData.ts           # Base product data (cards)
+    categoryData.ts       # Category-specific products and helpers
+    productDetails.ts     # Detailed product info & affiliate links
+```
 
-This project is built with:
+## Routing
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+- `/` — Home
+- `/category/:category` — Category page (mobile | laptop | earphone)
+- `/product/:id` — Product details
+- `/latest` — Latest reviews
+- `/search?q=...` — Search results
+- `/about` — About us
+- `/contact` — Contact us
 
-## How can I deploy this project?
+## Theming
 
-Simply open [Lovable](https://lovable.dev/projects/e8b5b50c-d7d6-426f-8d7b-767eab856993) and click on Share -> Publish.
+Dark mode uses Tailwind’s `class` strategy. The toggle is in the navbar and persists in `localStorage` as `theme`.
 
-## Can I connect a custom domain to my Lovable project?
+To adjust the palette, edit CSS variables in `src/index.css` under `:root` (light) and `.dark` (dark).
 
-Yes, you can!
+## Data Notes
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+Sample data lives in `src/data`. You can add products to `mockProducts` and `categoryProducts`. Detailed page data is in `productDetails.ts`; if an item is missing there, the details page falls back to `mockProducts` fields.
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+Prices are shown in INR using `Intl.NumberFormat('en-IN', { currency: 'INR' })`.
+
+## Accessibility
+
+- High-contrast dark palette for readability
+- Keyboard-focusable controls, clear hover/focus states
+- Semantic headings and landmarks
+
+## Customization
+
+- Branding: update `index.html` title/meta and the brand name in `Navbar.tsx` & `Footer.tsx`.
+- Founder image: replace `/public/placeholder.svg` with your own.
+- Pagination: adjust `getPageSize()` in `CategoryPage.tsx` for show-more increments.
+
+## Scripts
+
+- `npm run dev` — start dev server
+- `npm run build` — production build
+- `npm run preview` — preview production build
+- `npm run lint` — run ESLint
+
+## License
+
+This project is provided as-is for educational/demo purposes. Replace assets and data before publishing.
