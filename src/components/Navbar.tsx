@@ -1,7 +1,8 @@
-import { useState } from 'react';
-import { Search, Menu, X } from 'lucide-react';
+import { useRef, useState } from 'react';
+import { Search, Menu, X, Moon, Sun } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Link } from 'react-router-dom';
 
 /**
  * Responsive Navigation Component
@@ -10,18 +11,46 @@ import { Input } from '@/components/ui/input';
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [isDark, setIsDark] = useState<boolean>(() => document.documentElement.classList.contains('dark'));
 
   const navLinks = [
-    { name: 'Home', href: '#home' },
-    { name: 'Categories', href: '#categories' },
-    { name: 'About Us', href: '#about' },
-    { name: 'Contact Us', href: '#contact' }
+    { name: 'About Us', href: '/about' },
+    { name: 'Contact Us', href: '/contact' }
   ];
+  const [isCategoriesOpen, setIsCategoriesOpen] = useState(false);
+  const hideTimerRef = useRef<number | null>(null);
+  const CLOSE_DELAY_MS = 280; // tweak this value to adjust hover close delay
+
+  const openCategories = () => {
+    if (hideTimerRef.current) {
+      window.clearTimeout(hideTimerRef.current);
+      hideTimerRef.current = null;
+    }
+    setIsCategoriesOpen(true);
+  };
+
+  const scheduleCloseCategories = () => {
+    if (hideTimerRef.current) {
+      window.clearTimeout(hideTimerRef.current);
+    }
+    hideTimerRef.current = window.setTimeout(() => {
+      setIsCategoriesOpen(false);
+      hideTimerRef.current = null;
+    }, CLOSE_DELAY_MS);
+  };
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Searching for:', searchQuery);
-    // TODO: Implement search functionality
+    if (searchQuery.trim().length === 0) return;
+    window.location.href = `/search?q=${encodeURIComponent(searchQuery.trim())}`;
+  };
+
+  const toggleTheme = () => {
+    const root = document.documentElement;
+    const next = !isDark;
+    setIsDark(next);
+    root.classList.toggle('dark', next);
+    localStorage.setItem('theme', next ? 'dark' : 'light');
   };
 
   return (
@@ -30,14 +59,40 @@ const Navbar = () => {
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <div className="flex items-center space-x-2">
-            <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-primary to-primary-hover flex items-center justify-center">
-              <span className="text-white font-bold text-lg">G</span>
-            </div>
-            <span className="text-xl font-bold text-foreground">GadgetHub</span>
+            <a href="/" className="text-xl font-bold text-foreground hover:text-primary transition-colors">Techaurex</a>
           </div>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
+            <a
+              href="/"
+              className="text-foreground hover:text-primary transition-colors font-medium"
+            >
+              Home
+            </a>
+            <div
+              className="relative"
+              onMouseEnter={openCategories}
+              onMouseLeave={scheduleCloseCategories}
+            >
+              <button
+                className="text-foreground hover:text-primary transition-colors font-medium"
+                onClick={() => setIsCategoriesOpen((v) => !v)}
+              >
+                Categories
+              </button>
+              {isCategoriesOpen && (
+                <div
+                  className="absolute left-0 mt-2 w-48 card-modern p-2"
+                  onMouseEnter={openCategories}
+                  onMouseLeave={scheduleCloseCategories}
+                >
+                  <Link to="/category/mobile" className="block px-3 py-2 rounded hover:bg-muted">Mobile</Link>
+                  <Link to="/category/laptop" className="block px-3 py-2 rounded hover:bg-muted">Laptop</Link>
+                  <Link to="/category/earphone" className="block px-3 py-2 rounded hover:bg-muted">Earphone</Link>
+                </div>
+              )}
+            </div>
             {navLinks.map((link) => (
               <a
                 key={link.name}
@@ -64,6 +119,9 @@ const Navbar = () => {
             <Button type="submit" size="sm" className="btn-primary">
               Search
             </Button>
+            <Button type="button" variant="ghost" size="sm" onClick={toggleTheme} aria-label="Toggle theme">
+              {isDark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+            </Button>
           </form>
 
           {/* Mobile Menu Button */}
@@ -81,6 +139,13 @@ const Navbar = () => {
         {isMenuOpen && (
           <div className="md:hidden py-4 border-t border-border">
             <nav className="flex flex-col space-y-4">
+              <a
+                href="/"
+                className="text-foreground hover:text-primary transition-colors font-medium py-2"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Home
+              </a>
               {navLinks.map((link) => (
                 <a
                   key={link.name}
@@ -91,6 +156,14 @@ const Navbar = () => {
                   {link.name}
                 </a>
               ))}
+              <div>
+                <div className="text-xs uppercase text-muted-foreground mb-2">Categories</div>
+                <div className="grid grid-cols-2 gap-2">
+                  <Link to="/category/mobile" className="px-3 py-2 rounded bg-muted" onClick={() => setIsMenuOpen(false)}>Mobile</Link>
+                  <Link to="/category/laptop" className="px-3 py-2 rounded bg-muted" onClick={() => setIsMenuOpen(false)}>Laptop</Link>
+                  <Link to="/category/earphone" className="px-3 py-2 rounded bg-muted" onClick={() => setIsMenuOpen(false)}>Earphone</Link>
+                </div>
+              </div>
             </nav>
             
             {/* Mobile Search */}
@@ -107,6 +180,9 @@ const Navbar = () => {
               </div>
               <Button type="submit" size="sm" className="btn-primary">
                 Search
+              </Button>
+              <Button type="button" size="sm" variant="outline" onClick={toggleTheme} aria-label="Toggle theme">
+                {isDark ? 'Light' : 'Dark'}
               </Button>
             </form>
           </div>

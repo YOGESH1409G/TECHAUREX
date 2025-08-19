@@ -6,6 +6,8 @@ import heroGadgets from '@/assets/hero-gadgets.jpg';
 import placeholderPhone from '@/assets/placeholder-phone.jpg';
 import placeholderHeadphones from '@/assets/placeholder-headphones.jpg';
 import placeholderLaptop from '@/assets/placeholder-laptop.jpg';
+import { useNavigate } from 'react-router-dom';
+import { getAffiliateLinkById } from '@/data/productDetails';
 
 interface ProductCardProps {
   product: Product;
@@ -18,6 +20,7 @@ interface ProductCardProps {
  * Features: Hover effects, responsive design, rating display
  */
 const ProductCard = ({ product, showBadge = true }: ProductCardProps) => {
+  const navigate = useNavigate();
   // Generate star rating display
   const renderStars = (rating: number) => {
     const stars = [];
@@ -47,9 +50,9 @@ const ProductCard = ({ product, showBadge = true }: ProductCardProps) => {
   };
 
   const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('en-US', {
+    return new Intl.NumberFormat('en-IN', {
       style: 'currency',
-      currency: 'USD',
+      currency: 'INR',
     }).format(price);
   };
 
@@ -61,8 +64,10 @@ const ProductCard = ({ product, showBadge = true }: ProductCardProps) => {
     return heroGadgets; // fallback image
   };
 
+  const affiliateLink = getAffiliateLinkById(product.id) || '#';
+
   return (
-    <div className="card-modern p-6 group cursor-pointer">
+    <div className="card-modern p-6 group cursor-pointer" onClick={() => navigate(`/product/${product.id}`)}>
       {/* Product Image */}
       <div className="aspect-video bg-muted rounded-lg mb-4 overflow-hidden">
         <img 
@@ -136,9 +141,11 @@ const ProductCard = ({ product, showBadge = true }: ProductCardProps) => {
             )}
           </div>
 
-          <Button size="sm" className="btn-primary group">
-            <span className="mr-2">View Deal</span>
-            <ExternalLink className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+          <Button size="sm" className="btn-primary group" asChild onClick={(e) => e.stopPropagation()}>
+            <a href={affiliateLink} target="_blank" rel="noreferrer">
+              <span className="mr-2">View Deal</span>
+              <ExternalLink className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+            </a>
           </Button>
         </div>
 

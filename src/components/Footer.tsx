@@ -86,7 +86,7 @@ const Footer = () => {
             </div>
             
             <p className="text-muted-foreground mb-6">
-              Help us improve GadgetHub! We value your thoughts and suggestions.
+              Help us improve Techaurex! We value your thoughts and suggestions.
             </p>
 
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -192,14 +192,11 @@ const Footer = () => {
         <div className="border-t border-border mt-12 pt-8">
           <div className="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
             <div className="flex items-center space-x-2">
-              <div className="h-6 w-6 rounded bg-gradient-to-br from-primary to-primary-hover flex items-center justify-center">
-                <span className="text-white font-bold text-sm">G</span>
-              </div>
-              <span className="font-semibold text-foreground">GadgetHub</span>
+              <a href="/" className="font-semibold text-foreground hover:text-primary transition-colors">Techaurex</a>
             </div>
 
             <p className="text-sm text-muted-foreground text-center md:text-right">
-              © 2024 GadgetHub. All rights reserved. 
+              © 2024 Techaurex. All rights reserved. 
               <br className="md:hidden" />
               <span className="inline-flex items-center space-x-1 mt-1 md:mt-0 md:ml-2">
                 <FileText className="h-3 w-3" />

@@ -8,6 +8,8 @@ import { categories, companies } from '@/data/mockData';
 
 interface FiltersProps {
   onFilterChange: (filters: FilterOptions) => void;
+  showCategory?: boolean;
+  availableCompanies?: string[];
 }
 
 export interface FilterOptions {
@@ -22,12 +24,15 @@ export interface FilterOptions {
  * Features: Category, company, and price range filtering
  * Responsive: Collapsible on mobile
  */
-const Filters = ({ onFilterChange }: FiltersProps) => {
+const Filters = ({ onFilterChange, showCategory = true, availableCompanies }: FiltersProps) => {
   const [isExpanded, setIsExpanded] = useState(true);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedCompanies, setSelectedCompanies] = useState<string[]>([]);
   const [minPrice, setMinPrice] = useState(0);
   const [maxPrice, setMaxPrice] = useState(5000);
+
+  const formatCurrency = (value: number) =>
+    new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(value);
 
   // Update filters when any filter changes
   const updateFilters = (
@@ -112,28 +117,30 @@ const Filters = ({ onFilterChange }: FiltersProps) => {
         {/* Filter Content */}
         <div className={`space-y-6 ${!isExpanded ? 'hidden lg:block' : ''}`}>
           {/* Categories Filter */}
-          <div>
-            <Label className="text-base font-medium mb-3 block">Categories</Label>
-            <div className="space-y-3 max-h-48 overflow-y-auto">
-              {categories.map((category) => (
-                <div key={category} className="flex items-center space-x-2">
-                  <Checkbox
-                    id={`category-${category}`}
-                    checked={selectedCategories.includes(category)}
-                    onCheckedChange={(checked) =>
-                      handleCategoryChange(category, !!checked)
-                    }
-                  />
-                  <Label
-                    htmlFor={`category-${category}`}
-                    className="text-sm cursor-pointer flex-1"
-                  >
-                    {category}
-                  </Label>
-                </div>
-              ))}
+          {showCategory && (
+            <div>
+              <Label className="text-base font-medium mb-3 block">Categories</Label>
+              <div className="space-y-3 max-h-48 overflow-y-auto">
+                {categories.map((category) => (
+                  <div key={category} className="flex items-center space-x-2">
+                    <Checkbox
+                      id={`category-${category}`}
+                      checked={selectedCategories.includes(category)}
+                      onCheckedChange={(checked) =>
+                        handleCategoryChange(category, !!checked)
+                      }
+                    />
+                    <Label
+                      htmlFor={`category-${category}`}
+                      className="text-sm cursor-pointer flex-1"
+                    >
+                      {category}
+                    </Label>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Price Range Filter */}
           <div>
@@ -172,7 +179,7 @@ const Filters = ({ onFilterChange }: FiltersProps) => {
                 </div>
               </div>
               <div className="text-xs text-muted-foreground">
-                ${minPrice} - ${maxPrice}
+                {formatCurrency(minPrice)} - {formatCurrency(maxPrice)}
               </div>
             </div>
           </div>
@@ -181,7 +188,7 @@ const Filters = ({ onFilterChange }: FiltersProps) => {
           <div>
             <Label className="text-base font-medium mb-3 block">Companies</Label>
             <div className="space-y-3 max-h-48 overflow-y-auto">
-              {companies.map((company) => (
+              {(availableCompanies ?? companies).map((company) => (
                 <div key={company} className="flex items-center space-x-2">
                   <Checkbox
                     id={`company-${company}`}

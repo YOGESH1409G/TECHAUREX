@@ -75,10 +75,12 @@ const Index = () => {
               for your lifestyle with our expert recommendations.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4">
-              <Button size="lg" className="btn-primary text-lg px-8">
+              <Button size="lg" className="btn-primary text-lg px-8" asChild>
+                <a href="/latest">
                 <Zap className="h-5 w-5 mr-2" />
                 Explore Latest Reviews
                 <ArrowRight className="h-5 w-5 ml-2" />
+                </a>
               </Button>
               <Button size="lg" variant="outline" className="text-lg px-8">
                 <Shield className="h-5 w-5 mr-2" />
